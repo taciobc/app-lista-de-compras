@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Compras</title>
+  <style>
+       
+    .App {
+      font-family: Arial, sans-serif;
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #dad2bc;
+    }
+    .App h1 {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .App input[type="text"] {
+      text-align: center;
+      width: 100%;
+      padding: 10px 0;
+      margin-bottom: 10px; 
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .App label {
+      margin-left: 10px;
+    }
+
+    .App ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .App li {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .App li button {
+      margin-left: auto;
+      padding: 5px 10px;
+      border: none;
+      background-color: #ff6347;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button {
+        padding: 0 10px;
+        margin-left: 10px;
+    }
+
+    .App li button:hover {
+      background-color: #e74c3c;
+    }
+  </style>
+
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@latest/babel.min.js"></script>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    function App() {
+      const [items, setItems] = useState([]);
+      const [newItem, setNewItem] = useState('');
+      const [reminder, setReminder] = useState(false);
+
+      const addItem = () => {
+        if (newItem.trim() !== '') {
+          setItems([...items, { text: newItem, reminder }]);
+          setNewItem('');
+          setReminder(false);
+        }
+      };
+
+      const toggleReminder = (index) => {
+        const newItems = [...items];
+        newItems[index].reminder = !newItems[index].reminder;
+        setItems(newItems);
+      };
+
+      const deleteItem = (index) => {
+        const newItems = [...items];
+        newItems.splice(index, 1);
+        setItems(newItems);
+      };
+
+      return (
+        <div className="App">
+          <h1>Lista de Compras</h1>
+          <input
+            type="text"
+            value={newItem}
+            onChange={(e) => setNewItem(e.target.value)}
+            placeholder="Adicionar item..."
+          />
+          <label>
+            <input
+              type="checkbox"
+              checked={reminder}
+              onChange={(e) => setReminder(e.target.checked)}
+            />
+            Lembrete
+          </label>
+          <button onClick={addItem}>Adicionar</button>
+          <ul>
+            {items.map((item, index) => (
+              <li key={index} style={{ textDecoration: item.reminder ? 'underline' : 'none' }}>
+                {item.text}
+                <input
+                  type="checkbox"
+                  checked={item.reminder}
+                  onChange={() => toggleReminder(index)}
+                />
+                <button onClick={() => deleteItem(index)}>X</button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      );
+    }
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+</body>
+</html>
